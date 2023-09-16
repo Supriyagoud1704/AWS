@@ -1,0 +1,53 @@
+[3:16 pm, 16/09/2023] SrikanthL1: function submitForm() {
+    event.preventDefault();
+
+   
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+
+  
+    const xhr = new XMLHttpRequest();
+
+   
+    xhr.open('POST', 'https://9x7cqof411.execute-api.ap-south-1.amazonaws.com/prod/register', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+   
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                alert('Registration successful!');
+                document.getElementById('name').value = '';
+               …
+[3:16 pm, 16/09/2023] SrikanthL1: Javascript code
+[3:16 pm, 16/09/2023] SrikanthL1: import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('registration-table')
+
+def lambda_handler(event, context):
+    # Get request body
+    print(event)
+
+    # Create new item in DynamoDB table
+    response = table.put_item(
+        Item={
+            'email': event['email'],
+            'name': event['name'],
+            'phone': event['phone'],
+            'password': event['password']
+        }
+    )
+
+    # Return response
+    return {
+        'statusCode': 200,
+        'headers': {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        },
+        'body': json.dumps({'message': 'Registration successful'})
+    }
